@@ -1,4 +1,4 @@
-import { useRouter } from "expo-router"; // Assuming expo-router
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
   Alert,
@@ -18,27 +18,29 @@ import ThemedLoader from "@/src/components/themes/ThemedLoader";
 import ThemedText from "@/src/components/themes/ThemedText";
 import ThemedTextInput from "@/src/components/themes/ThemedTextInput";
 import ThemedView from "@/src/components/themes/ThemedView";
-import { useAuth } from "@/src/store/useAuthStore";
+
 import { isValidEmail } from "@/src/utils/emailChecker";
 import { isStrongPassword } from "@/src/utils/passwordChecker";
+import { useAuthStore } from "@/src/store/useAuthStore";
 
 const Register = () => {
   const router = useRouter();
 
   // Form State
+  const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isSecure, setIsSecure] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
 
-  const { registerUser } = useAuth();
+  const { Signup,loading } = useAuthStore();
 
-  const handleRegister = async () => {
-    if (!email || !password || !confirmPassword) {
+  const handleRegister = () => {
+    if (!email || !password || !confirmPassword || !name || !surname) {
       Alert.alert(
         "Required Fields",
-        "Please fill in all details to create your account.",
+        "Please fill in all details to create your account."
       );
       return;
     }
@@ -50,7 +52,7 @@ const Register = () => {
     if (!isStrongPassword(password)) {
       Alert.alert(
         "Password not strong enough",
-        "Please ensure that password has more than 6 characters, uppercase,number,symbol",
+        "Password must have at least 6 characters, uppercase, number, and symbol."
       );
       return;
     }
@@ -60,15 +62,10 @@ const Register = () => {
       return;
     }
 
-    setIsLoading(true);
+    Signup({ name, surname, email, password });
 
-    try {
-      registerUser(email, confirmPassword);
-    } catch (error) {
-      console.log("Error", error);
-    } finally {
-      setIsLoading(false);
-    }
+    console.log("User created", { name, surname, email, password })
+
   };
 
   return (
@@ -85,7 +82,7 @@ const Register = () => {
         >
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View className="flex-1 px-6 pt-6 pb-12">
-              {/* 1. HEADER SECTION */}
+              {/* HEADER */}
               <View className="items-center mb-8">
                 <ThemedView className="bg-warning/10 px-3 py-1 rounded-full border border-warning/20 mb-3">
                   <ThemedText className="text-warning font-bold text-[10px] uppercase tracking-widest">
@@ -103,8 +100,32 @@ const Register = () => {
                 </ThemedText>
               </View>
 
-              {/* 2. FORM SECTION */}
+              {/* FORM */}
               <View className="gap-y-4">
+                <View>
+                  <ThemedText className="mb-2 ml-1 font-semibold text-sm">
+                    First Name
+                  </ThemedText>
+                  <ThemedTextInput
+                    placeholder="John"
+                    className="rounded-2xl"
+                    value={name}
+                    onChangeText={setName}
+                  />
+                </View>
+
+                <View>
+                  <ThemedText className="mb-2 ml-1 font-semibold text-sm">
+                    Surname
+                  </ThemedText>
+                  <ThemedTextInput
+                    placeholder="Doe"
+                    className="rounded-2xl"
+                    value={surname}
+                    onChangeText={setSurname}
+                  />
+                </View>
+
                 <View>
                   <ThemedText className="mb-2 ml-1 font-semibold text-sm">
                     Email Address
@@ -157,14 +178,14 @@ const Register = () => {
                 </View>
               </View>
 
-              {/* 3. BUTTONS SECTION */}
+              {/* BUTTONS */}
               <View className="mt-10">
                 <ThemedButton
                   onPress={handleRegister}
-                  disabled={isLoading}
+                  disabled={loading}
                   className="bg-primary py-4 rounded-2xl items-center shadow-sm"
                 >
-                  {isLoading ? (
+                  {loading ? (
                     <ThemedLoader size="small" />
                   ) : (
                     <ThemedText className="text-white font-bold text-lg">

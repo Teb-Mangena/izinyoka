@@ -4,6 +4,9 @@ import { useColorScheme } from "react-native";
 import "../../global.css";
 import { Colors } from "../constants/Colors";
 import { useAuthStore } from "../store/useAuthStore";
+import { StatusBar } from "expo-status-bar";
+
+import ThemedView from "../components/themes/ThemedView";
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -15,16 +18,19 @@ export default function RootLayout() {
   }, [checkAuth]);
 
   return (
-    <Stack
-      screenOptions={{
-        headerShown: false,
-        contentStyle: {
-          backgroundColor: theme.background,
-        },
-      }}
-    >
-      <Stack.Screen name="(auth)" />
-      <Stack.Screen name="(tabs)" />
-    </Stack>
+    <ThemedView className="flex-1" safe={false}>
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          contentStyle: {
+            backgroundColor: theme.background,
+          },
+        }}
+      >
+        <Stack.Screen name="(auth)" />
+        <Stack.Screen name="(tabs)" />
+      </Stack>
+      <StatusBar style="auto" />
+    </ThemedView>
   );
 }

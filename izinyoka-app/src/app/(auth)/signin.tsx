@@ -19,7 +19,7 @@ import ThemedLoader from "@/src/components/themes/ThemedLoader";
 import ThemedText from "@/src/components/themes/ThemedText";
 import ThemedTextInput from "@/src/components/themes/ThemedTextInput";
 import ThemedView from "@/src/components/themes/ThemedView";
-import { useAuth } from "@/src/store/useAuthStore";
+import { useAuthStore } from "@/src/store/useAuthStore";
 
 const Signin = () => {
   const [email, setEmail] = useState("");
@@ -28,7 +28,7 @@ const Signin = () => {
   const [isSecure, setIsSecure] = useState(true);
   const router = useRouter();
 
-  const { loginUser } = useAuth();
+  const {Login} = useAuthStore();
 
   const handleSecurePass = () => {
     setIsSecure(!isSecure);
@@ -42,7 +42,7 @@ const Signin = () => {
 
     setIsLoading(true);
     try {
-      await loginUser(email, password);
+      Login({email, password});
     } catch (error) {
       console.log("error", error);
     } finally {

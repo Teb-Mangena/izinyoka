@@ -4,7 +4,7 @@ import { ScrollView, TouchableOpacity, View } from "react-native";
 import ThemedIcon from "@/src/components/themes/ThemedIcon";
 import ThemedText from "@/src/components/themes/ThemedText";
 import ThemedView from "@/src/components/themes/ThemedView";
-import { useAuth } from "@/src/store/useAuthStore";
+import { useAuthStore } from "@/src/store/useAuthStore";
 
 const Profile = () => {
   // Mock User Data
@@ -16,10 +16,10 @@ const Profile = () => {
     rank: "Grid Guardian",
   };
 
-  const { signOut } = useAuth();
+  const { Logout } = useAuthStore();
 
   const handlelogout = () => {
-    signOut();
+    Logout();
   };
 
   return (
