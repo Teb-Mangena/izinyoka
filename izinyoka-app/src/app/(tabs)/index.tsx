@@ -1,14 +1,16 @@
-import { Dimensions, ScrollView, TouchableOpacity, View } from "react-native";
+import { ScrollView, TouchableOpacity, View } from "react-native";
 
 import ThemedIcon from "@/src/components/themes/ThemedIcon";
 import ThemedText from "@/src/components/themes/ThemedText";
 import ThemedView from "@/src/components/themes/ThemedView";
 import { useRouter } from "expo-router";
-
-const { width } = Dimensions.get("window");
+import { useAuthStore } from "@/src/store/useAuthStore";
+import TipCard from "@/src/components/TipCard";
 
 const Uploads = () => {
   const router = useRouter();
+  const {user} = useAuthStore();
+
   return (
     <ThemedView safe={true} className="flex-1">
       <ScrollView
@@ -22,7 +24,7 @@ const Uploads = () => {
               Welcome back,
             </ThemedText>
             <ThemedText title={true} className="text-2xl font-black">
-              Tebatso ⚡️
+              {user?.name} ⚡️
             </ThemedText>
           </View>
           <TouchableOpacity className="w-12 h-12 rounded-2xl bg-uiBackground border border-primary/10 items-center justify-center">
@@ -146,24 +148,5 @@ const Uploads = () => {
     </ThemedView>
   );
 };
-
-// Sub-component for Safety Tips
-const TipCard = ({ title, desc, icon, color }: any) => (
-  <View
-    style={{ width: width * 0.7, backgroundColor: "rgba(148, 163, 184, 0.05)" }}
-    className="mr-4 p-5 rounded-3xl border border-primary/5"
-  >
-    <View
-      style={{ backgroundColor: `${color}20` }}
-      className="w-10 h-10 rounded-xl items-center justify-center mb-3"
-    >
-      <ThemedIcon name={icon} size={20} />
-    </View>
-    <ThemedText className="font-bold text-lg mb-1">{title}</ThemedText>
-    <ThemedText className="text-muted-foreground text-sm leading-5">
-      {desc}
-    </ThemedText>
-  </View>
-);
 
 export default Uploads;

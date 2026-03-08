@@ -8,14 +8,13 @@ import { useAuthStore } from "@/src/store/useAuthStore";
 import ProfileMenuItem from "@/src/components/ProfileMenuItem";
 
 const Profile = () => {
-  // Mock User Data
-  const user = {
-    name: "Tebatso Mangena",
-    email: "tebatsomangena8@gmail.com",
+  const {user} = useAuthStore();
+
+  const userReports = {
     reports: 14,
     points: 1250,
     rank: "Grid Guardian",
-  };
+  }
 
   const accountSetting = [
     {id:'acc_1', icon:"person-outline",label:'Personal Information'},
@@ -46,26 +45,26 @@ const Profile = () => {
             <View className="w-28 h-28 rounded-full border-4 border-primary/20 p-1">
               <Image
                 source={{
-                  uri: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sbu",
+                  uri: user?.profilePic,
                 }}
                 style={{ width: "100%", height: "100%", borderRadius: 50 }}
               />
             </View>
-            <View className="absolute bottom-1 right-1 bg-warning p-2 rounded-full border-4 border-background">
+            <View className="absolute bottom-0 right-0 bg-warning p-1 bg-gray-100 rounded-full border-4 border-background">
               <ThemedIcon name="flash" size={16} />
             </View>
           </View>
 
           <ThemedText title={true} className="text-2xl mt-4 font-bold">
-            {user.name}
+            {user?.name} {user?.surname}
           </ThemedText>
           <ThemedText className="text-muted-foreground font-medium">
-            {user.email}
+            {user?.email}
           </ThemedText>
 
           <View className="bg-primary/10 px-4 py-1 rounded-full mt-3 border border-primary/20">
             <ThemedText className="text-primary font-bold text-xs uppercase">
-              {user.rank}
+              {userReports.rank}
             </ThemedText>
           </View>
         </ThemedView>
@@ -74,7 +73,7 @@ const Profile = () => {
         <ThemedView className="mx-6 p-5 rounded-3xl bg-uiBackground border border-primary/10 shadow-sm flex-row justify-between">
           <View className="items-center flex-1 border-r border-primary/10">
             <ThemedText className="text-primary font-black text-xl">
-              {user.reports}
+              {userReports.reports}
             </ThemedText>
             <ThemedText className="text-xs text-muted-foreground uppercase font-bold">
               Reports
@@ -82,7 +81,7 @@ const Profile = () => {
           </View>
           <View className="items-center flex-1 border-r border-primary/10">
             <ThemedText className="text-warning font-black text-xl">
-              {user.points}
+              {userReports.points}
             </ThemedText>
             <ThemedText className="text-xs text-muted-foreground uppercase font-bold">
               XP Points

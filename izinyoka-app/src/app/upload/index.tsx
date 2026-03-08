@@ -27,16 +27,56 @@ const MediaUploads = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (status !== "granted") {
+      Alert.alert(
+        "Permission required",
+        "Permission to access the media library is required.",
+      );
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
       allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
+      aspect: [1, 1],
+      quality: 0.8,
     });
 
-    if (!result.canceled) {
+    if (!result.canceled && result.assets[0]) {
       setImage(result.assets[0].uri);
     }
+  };
+
+  const takePhoto = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+
+    if (status !== "granted") {
+      Alert.alert(
+        "Permission required",
+        "Permission to access the camera is required.",
+      );
+      return;
+    }
+
+    const result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.8,
+    });
+
+    if (!result.canceled && result.assets[0]) {
+      setImage(result.assets[0].uri);
+    }
+  };
+
+  const handleAddImage = () => {
+    Alert.alert("Select Profile Image", "Choose an option", [
+      { text: "Cancel", style: "cancel" },
+      { text: "Camera", onPress: takePhoto },
+      { text: "Gallery", onPress: pickImage },
+    ]);
   };
 
   const handleSubmitReport = async () => {
@@ -91,7 +131,7 @@ const MediaUploads = () => {
 
               {/* MEDIA SECTION */}
               <TouchableOpacity
-                onPress={pickImage}
+                onPress={handleAddImage}
                 activeOpacity={0.8}
                 className="w-full h-56 rounded-3xl border-2 border-dashed border-primary/20 bg-primary/5 items-center justify-center overflow-hidden mb-6"
               >
