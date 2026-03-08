@@ -19,11 +19,11 @@ const Profile = () => {
   const accountSetting = [
     {id:'acc_1', icon:"person-outline",label:'Personal Information'},
     {id:'acc_2', icon:"notifications-outline",label:'Alert Preferences'},
-    {id:'acc_13', icon:"shield-checkmark-outline",label:'Privacy & Security'},
+    {id:'acc_3', icon:"shield-checkmark-outline",label:'Privacy & Security'},
   ]
 
   const supportItems = [
-    {id:'sup_11', icon:"map-outline",label:'Hotspot Map'},
+    {id:'sup_1', icon:"map-outline",label:'Hotspot Map'},
     {id:'sup_2', icon:"help-buoy-outline",label:'Safety Guidelines'},
   ]
 

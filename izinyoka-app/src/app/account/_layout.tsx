@@ -6,7 +6,7 @@ const AccountSettingsLayout = () => {
       <Stack.Screen 
         name='[id]' 
         options={{
-        title:'Name'
+          title:'Account Information'
         }} 
       />
     </Stack>
