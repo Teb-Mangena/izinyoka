@@ -5,6 +5,7 @@ import ThemedIcon from "@/src/components/themes/ThemedIcon";
 import ThemedText from "@/src/components/themes/ThemedText";
 import ThemedView from "@/src/components/themes/ThemedView";
 import { useAuthStore } from "@/src/store/useAuthStore";
+import ProfileMenuItem from "@/src/components/ProfileMenuItem";
 
 const Profile = () => {
   // Mock User Data
@@ -15,6 +16,17 @@ const Profile = () => {
     points: 1250,
     rank: "Grid Guardian",
   };
+
+  const accountSetting = [
+    {id:'acc_1', icon:"person-outline",label:'Personal Information'},
+    {id:'acc_2', icon:"notifications-outline",label:'Alert Preferences'},
+    {id:'acc_13', icon:"shield-checkmark-outline",label:'Privacy & Security'},
+  ]
+
+  const supportItems = [
+    {id:'sup_11', icon:"map-outline",label:'Hotspot Map'},
+    {id:'sup_2', icon:"help-buoy-outline",label:'Safety Guidelines'},
+  ]
 
   const { Logout } = useAuthStore();
 
@@ -92,22 +104,22 @@ const Profile = () => {
             Account Settings
           </ThemedText>
 
-          <ProfileMenuItem icon="person-outline" label="Personal Information" />
-          <ProfileMenuItem
-            icon="notifications-outline"
-            label="Alert Preferences"
-          />
-          <ProfileMenuItem
-            icon="shield-checkmark-outline"
-            label="Privacy & Security"
-          />
+          {accountSetting.map((menuItem) => (
+            <ProfileMenuItem key={menuItem.id} id={menuItem.id} icon={menuItem.icon} label={menuItem.label} />
+          ))}
 
           <ThemedText className="text-xs font-bold text-muted-foreground uppercase tracking-widest ml-1 mt-4">
             Support & Community
           </ThemedText>
 
-          <ProfileMenuItem icon="map-outline" label="Hotspot Map" />
-          <ProfileMenuItem icon="help-buoy-outline" label="Safety Guidelines" />
+          {supportItems.map((item) => (
+            <ProfileMenuItem 
+              key={item.id} 
+              id={item.id} 
+              icon={item.icon} 
+              label={item.label} 
+            />
+          ))}
 
           {/* LOGOUT */}
           <TouchableOpacity
@@ -124,18 +136,5 @@ const Profile = () => {
     </ThemedView>
   );
 };
-
-// Sub-component for Menu Items
-const ProfileMenuItem = ({ icon, label }: { icon: any; label: string }) => (
-  <TouchableOpacity className="flex-row items-center p-4 rounded-2xl bg-uiBackground/50 border border-primary/5 active:bg-primary/5">
-    <View className="w-10 h-10 items-center justify-center rounded-xl bg-primary/10">
-      <ThemedIcon name={icon} size={20} />
-    </View>
-    <ThemedText className="flex-1 ml-4 font-semibold text-base">
-      {label}
-    </ThemedText>
-    <ThemedIcon name="chevron-forward" size={18} className="opacity-30" />
-  </TouchableOpacity>
-);
 
 export default Profile;
