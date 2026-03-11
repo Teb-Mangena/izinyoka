@@ -12,7 +12,7 @@ const app = express();
 const { PORT } = ENV;
 
 // Middlewares
-app.use(cors());
+app.use(cors({ origin: true, credentials: true }));
 app.use(express.json({limit:"10mb"}));
 app.use(cookieParser());
 app.use(morgan('dev'));
