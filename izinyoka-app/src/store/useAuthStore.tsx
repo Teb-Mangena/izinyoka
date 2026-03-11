@@ -50,6 +50,8 @@ type AuthState = {
 
   Logout: () => Promise<void>;
 
+  deleteAccount: () => Promise<void>;
+
   editProfileImage: (ImageDataTypes: ImageDataTypes) => Promise<void>;
 };
 
@@ -158,6 +160,25 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       } else {
         console.log("error logging out", error);
       }
+    } finally {
+      set({ loading: false });
+    }
+  },
+
+  deleteAccount: async () => {
+    try {
+      set({ loading: true });
+      const res = await axiosInstance.delete("/users/delete-account");
+
+      set({ user: null });
+
+      Toast.show({
+        type: "success",
+        text1: "Account deleted!",
+        text2: res.data.message,
+      });
+    } catch (error) {
+      console.log("Error deleting account", error);
     } finally {
       set({ loading: false });
     }

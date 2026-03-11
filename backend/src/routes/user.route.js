@@ -1,5 +1,5 @@
 import express from "express";
-import { checkAuth, deleteUser, editProfileImage, getAllUsers, loginUser, logoutUser, signupUser, updateUser } from "../controllers/user.controller.js";
+import { checkAuth, deleteMyAccount, deleteUser, editProfileImage, getAllUsers, loginUser, logoutUser, signupUser, updateUser } from "../controllers/user.controller.js";
 import { protectAuth } from "../middlewares/auth.middleware.js";
 import { upload } from "../lib/cloudinary.js";
 
@@ -16,6 +16,8 @@ router.patch('/edit-profile-image',
   upload.single("image"), 
   editProfileImage
 );
+
+router.delete('/delete-account', deleteMyAccount);
 
 router.get('/', getAllUsers);
 router.delete('/:id', deleteUser);
