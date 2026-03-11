@@ -2,7 +2,7 @@ import validator from "validator";
 import bcrypt from "bcryptjs";
 import User from "../models/user.model.js";
 import { genToken } from "../config/genToken.js";
-import { uploadFromBuffer } from "../lib/cloudinary.js";
+import cloudinary, { uploadFromBuffer } from "../lib/cloudinary.js";
 
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
