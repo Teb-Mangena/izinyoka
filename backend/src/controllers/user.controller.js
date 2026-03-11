@@ -194,6 +194,17 @@ export const editProfileImage = async (req, res) => {
   }
 };
 
+export const updateMyDetails = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const updated = await User.findByIdAndUpdate(userId, req.body, { new: true });
+    res.status(200).json(updated);
+  } catch (error) {
+    res.status(400).json({ message: "Error updating your details" });
+  }
+};
+
+
 // FOR ADMINS
 export const getAllUsers = async (req,res) => {
   try {
