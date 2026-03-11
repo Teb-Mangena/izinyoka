@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { ScrollView, View, TouchableOpacity, Switch } from 'react-native';
+import { ScrollView, View, TouchableOpacity, Switch, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import ThemedView from '../../themes/ThemedView';
 import ThemedText from '../../themes/ThemedText';
+import { useAuthStore } from '@/src/store/useAuthStore';
 
 const PrivacySecurityScreen = () => {
   const [isTwoFactorEnabled, setIsTwoFactorEnabled] = useState(false);
   const [isBiometricEnabled, setIsBiometricEnabled] = useState(true);
+  const { deleteAccount,loading } = useAuthStore();
 
   // Reusable row for settings
   const SecurityRow = ({ 
@@ -45,6 +47,13 @@ const PrivacySecurityScreen = () => {
       )}
     </TouchableOpacity>
   );
+
+  const handleDeleteAccount = () => {
+    Alert.alert("Warning","Are you sure you want to delete your account?", [
+      { text: "Cancel", style: "cancel" },
+      { text: "Yes, Delete", onPress: deleteAccount },
+    ])
+  }
 
   return (
     <ThemedView className="flex-1">
@@ -111,10 +120,11 @@ const PrivacySecurityScreen = () => {
           <View className="bg-red-50/30 dark:bg-red-900/10 rounded-3xl px-4 border border-red-100 dark:border-red-900/20">
             <SecurityRow 
               icon="trash-outline" 
-              title="Delete Account" 
-              subtitle="Permanently remove all your data"
+              title={loading ? "Deleting your account..." : "Delete Account"} 
+              subtitle="Please be patient while accounting is being deleted"
               isDestructive={true}
-              onPress={() => {}} 
+              disabled={loading}
+              onPress={handleDeleteAccount} 
             />
           </View>
         </View>
