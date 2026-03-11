@@ -7,6 +7,7 @@ import { useAuthStore } from "../store/useAuthStore";
 import { StatusBar } from "expo-status-bar";
 
 import ThemedView from "../components/themes/ThemedView";
+import Toast from "react-native-toast-message";
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -31,6 +32,7 @@ export default function RootLayout() {
         <Stack.Screen name="(tabs)" />
       </Stack>
       <StatusBar style="auto" />
+      <Toast />
     </ThemedView>
   );
 }

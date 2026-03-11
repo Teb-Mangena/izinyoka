@@ -8,7 +8,6 @@ import ThemedView from '../../themes/ThemedView';
 import ThemedText from '../../themes/ThemedText';
 
 const PersonalInfo = () => {
-  // Pull loading state from store to show a spinner during upload
   const { user, editProfileImage, loading } = useAuthStore();
 
   const backupImg = require("../../../../assets/images/backup-img.png");
@@ -44,13 +43,31 @@ const PersonalInfo = () => {
       quality: 0.7,
     });
 
+    const getMimeType = (uri: string) => {
+      const extension = uri.split('.').pop()?.toLowerCase();
+      switch (extension) {
+        case 'jpg':
+        case 'jpeg':
+          return 'image/jpeg';
+        case 'png':
+          return 'image/png';
+        case 'gif':
+          return 'image/gif';
+        case 'webp':
+          return 'image/webp';
+        default:
+          return 'image/jpeg';
+      }
+    };
+
+
     if (!result.canceled && result.assets[0]) {
-      const { uri, type, fileName } = result.assets[0];
+      const asset = result.assets[0];
 
     await editProfileImage({
-      uri,
-      imageType: type || "image/jpeg",
-      fileName: fileName || "profile.jpg",
+      uri: asset.uri,
+      imageType: getMimeType(asset.uri),
+      fileName: asset.fileName || "profile.jpg",
     });
     }
   };

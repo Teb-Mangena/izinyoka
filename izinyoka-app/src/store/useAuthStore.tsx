@@ -35,7 +35,7 @@ type ImageDataTypes = {
   uri: string;
   imageType: string;
   fileName: string;
-}
+};
 
 type AuthState = {
   user: User | null;
@@ -50,7 +50,7 @@ type AuthState = {
 
   Logout: () => Promise<void>;
 
-  editProfileImage: (ImageDataTypes:ImageDataTypes) => Promise<void>;
+  editProfileImage: (ImageDataTypes: ImageDataTypes) => Promise<void>;
 };
 
 export const useAuthStore = create<AuthState>((set, get) => ({
@@ -163,36 +163,47 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
   },
 
-  editProfileImage: async (ImageData:ImageDataTypes) => {
+  editProfileImage: async (ImageData: ImageDataTypes) => {
     try {
       set({ loading: true });
+
+      console.log(ImageData);
 
       const formData = new FormData();
       formData.append("image", {
         uri: ImageData.uri,
-        type: ImageData.imageType, 
+        type: ImageData.imageType,
         name: ImageData.fileName,
       } as any);
 
+      console.log(formData);
+
       const res = await axiosInstance.patch(
         "/users/edit-profile-image",
-        formData, {
-          headers: { Accept: "application/json"}
-        }
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Accept: "application/json",
+          },
+          timeout: 30000,
+        },
       );
+
+      if(res.status === 200){
+        Toast.show({
+          type: "success",
+          text1: "Profile updated!",
+          text2: "Your profile picture has been changed.",
+        });
+      }
 
       set({ user: res.data });
 
-      Toast.show({
-        type: "success",
-        text1: "Profile updated!",
-        text2: "Your profile picture has been changed.",
-      });
     } catch (error) {
       console.log("Error editing the image", error);
     } finally {
       set({ loading: false });
     }
   },
-
 }));
