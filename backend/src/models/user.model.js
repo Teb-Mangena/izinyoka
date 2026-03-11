@@ -12,7 +12,8 @@ const userSchema = new Schema({
     required: true
   },
   profilePic: {
-    type: String
+    secure_url: { type: String },
+    public_id: { type: String }
   },
   email: {
     type: String,

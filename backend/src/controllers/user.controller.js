@@ -2,6 +2,7 @@ import validator from "validator";
 import bcrypt from "bcryptjs";
 import User from "../models/user.model.js";
 import { genToken } from "../config/genToken.js";
+import { uploadFromBuffer } from "../lib/cloudinary.js";
 
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -161,7 +162,7 @@ export const updateUser = async (req,res) => {
   }
 }
 
-export const deleleUser = async (req,res) => {
+export const deleteUser = async (req,res) => {
   const {id} = req.params;
 
   try {
@@ -177,3 +178,47 @@ export const deleleUser = async (req,res) => {
     res.status(400).json({ message: "Internal server error" });
   }
 }
+
+// User's edits
+export const editProfileImage = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    if (!req.file) {
+      return res.status(400).json({ message: "No image uploaded" });
+    }
+
+    // Find the user first
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Delete old image if exists
+    if (user.profilePic?.public_id) {
+      await cloudinary.uploader.destroy(user.profilePic.public_id);
+    }
+
+    // Upload new image
+    const result = await uploadFromBuffer(req.file.buffer, {
+      fileName: req.file.originalname,
+    });
+
+    // Update user with new image details
+    user.profilePic = {
+      secure_url: result.secure_url,
+      public_id: result.public_id,
+    };
+
+    await user.save();
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error("Error editing user image:", error);
+    res.status(400).json({
+      message: error.message || "There was an error editing the image",
+    });
+  }
+};
+
+
