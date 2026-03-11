@@ -13,11 +13,16 @@ interface SignupData {
   email: string;
   password: string;
 }
+
+interface UserImage {
+  public_id: string;
+  secure_url: string;
+}
 interface User {
   _id: string;
   name: string;
   surname: string;
-  profilePic: string;
+  profilePic: UserImage;
   email: string;
   password: string;
   role: string;

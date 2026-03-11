@@ -33,6 +33,10 @@ const Profile = () => {
     Logout();
   };
 
+  const backupImg = require("../../../assets/images/backup-img.png");
+
+  const img = user?.profilePic.secure_url;
+
   return (
     <ThemedView safe={true} className="flex-1">
       <ScrollView
@@ -44,9 +48,7 @@ const Profile = () => {
           <View className="relative">
             <View className="w-28 h-28 rounded-full border-4 border-primary/20 p-1">
               <Image
-                source={{
-                  uri: user?.profilePic,
-                }}
+                source={!img ? backupImg : {uri: img}}
                 style={{ width: "100%", height: "100%", borderRadius: 50 }}
               />
             </View>
