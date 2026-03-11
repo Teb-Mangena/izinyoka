@@ -1,53 +1,90 @@
-import React, { useState } from 'react';
-import { ScrollView, TouchableOpacity, TextInput, Image, View } from 'react-native';
-import { Ionicons } from '@expo/vector-icons'; // Assuming Expo, or use your icon library
+import { useState } from 'react';
+import { ScrollView, TouchableOpacity, TextInput, Image, View, Alert, ActivityIndicator } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '@/src/store/useAuthStore';
+import * as ImagePicker from "expo-image-picker";
 
 import ThemedView from '../../themes/ThemedView';
 import ThemedText from '../../themes/ThemedText';
 
 const PersonalInfo = () => {
-  const { user } = useAuthStore();
+  // Pull loading state from store to show a spinner during upload
+  const { user, editProfileImage, loading } = useAuthStore();
 
-  // Local state to manage form inputs
+  const backupImg = require("../../../../assets/images/backup-img.png");
+
   const [formData, setFormData] = useState({
     name: user?.name || '',
     surname: user?.surname || '',
     email: user?.email || '',
-    profilePic: user?.profilePic || 'https://via.placeholder.com/150',
   });
 
+  // Decide which image source to use
+  const profileImageSource = user?.profilePic?.secure_url 
+    ? { uri: user.profilePic.secure_url } 
+    : backupImg;
+
   const handleUpdate = () => {
-    // Logic to call your API or update the store goes here
-    console.log('Updated Data:', formData);
+    // Logic for updating name/surname would go here
+    console.log('Updating text data:', formData);
+  };
+
+  const pickImage = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (status !== "granted") {
+      Alert.alert("Permission required", "Allow access to your photos to change your profile picture.");
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.7,
+    });
+
+    if (!result.canceled && result.assets[0]) {
+      const { uri, type, fileName } = result.assets[0];
+
+    await editProfileImage({
+      uri,
+      imageType: type || "image/jpeg",
+      fileName: fileName || "profile.jpg",
+    });
+    }
   };
 
   return (
     <ThemedView className="flex-1">
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 40 }}>
         
-        {/* Header / Profile Picture Section */}
         <View className="items-center py-8">
           <View className="relative">
             <Image
-              source={{ uri: formData.profilePic }}
-              className="w-32 h-32 rounded-full border-4 border-blue-500/20"
+              source={profileImageSource}
+              className="w-32 h-32 rounded-full border-4 border-blue-500/20 bg-slate-200"
             />
+            
             <TouchableOpacity 
+              onPress={pickImage}
+              disabled={loading}
               activeOpacity={0.7}
               className="absolute bottom-0 right-0 bg-blue-600 p-2 rounded-full border-2 border-white dark:border-slate-900"
             >
-              <Ionicons name="camera" size={20} color="white" />
+              {loading ? (
+                <ActivityIndicator size="small" color="white" />
+              ) : (
+                <Ionicons name="camera" size={20} color="white" />
+              )}
             </TouchableOpacity>
           </View>
-          <ThemedText className="mt-4 text-xl font-bold">Edit Profile</ThemedText>
+          
+          <ThemedText className="mt-4 text-xl font-bold">{user?.name} {user?.surname}</ThemedText>
           <ThemedText className="text-slate-500 text-sm">Role: {user?.role || 'User'}</ThemedText>
         </View>
 
-        {/* Form Fields */}
         <View className="px-6 space-y-6">
-          
-          {/* First Name */}
           <View>
             <ThemedText className="mb-2 ml-1 font-semibold opacity-70">First Name</ThemedText>
             <TextInput
@@ -58,7 +95,6 @@ const PersonalInfo = () => {
             />
           </View>
 
-          {/* Surname */}
           <View>
             <ThemedText className="mb-2 ml-1 font-semibold opacity-70">Surname</ThemedText>
             <TextInput
@@ -69,24 +105,16 @@ const PersonalInfo = () => {
             />
           </View>
 
-          {/* Email (Read Only or Editable) */}
           <View>
             <ThemedText className="mb-2 ml-1 font-semibold opacity-70">Email Address</ThemedText>
             <TextInput
               value={formData.email}
-              editable={false} // Often emails are locked, change to true if needed
+              editable={false}
               className="bg-slate-200/50 dark:bg-slate-800/50 p-4 rounded-2xl text-slate-500 border border-slate-200 dark:border-slate-700"
             />
           </View>
-
-          {/* Meta Info (Read Only) */}
-          <View className="flex-row justify-between px-2 pt-2">
-            <ThemedText className="text-xs opacity-40">ID: {user?._id.slice(-8)}</ThemedText>
-            <ThemedText className="text-xs opacity-40">Joined: {new Date(user?.createdAt || '').toLocaleDateString()}</ThemedText>
-          </View>
         </View>
 
-        {/* Action Button */}
         <View className="px-6 mt-10">
           <TouchableOpacity 
             onPress={handleUpdate}
@@ -96,7 +124,6 @@ const PersonalInfo = () => {
             <ThemedText className="text-white font-bold text-lg">Save Changes</ThemedText>
           </TouchableOpacity>
         </View>
-
       </ScrollView>
     </ThemedView>
   );

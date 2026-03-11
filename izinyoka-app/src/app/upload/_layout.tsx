@@ -6,6 +6,9 @@ const UploadLayout = () => {
   const colorScheme = useColorScheme();
   const theme = colorScheme ? Colors[colorScheme] : Colors.light;
 
+
+  console.log(process.env.EXPO_PUBLIC_APP_READY);
+
   return (
     <Stack screenOptions={{
       headerStyle: {

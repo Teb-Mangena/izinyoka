@@ -22,13 +22,19 @@ interface User {
   _id: string;
   name: string;
   surname: string;
-  profilePic: UserImage;
+  profilePic: UserImage | null;
   email: string;
   password: string;
   role: string;
   createdAt: string;
   updatedAt: string;
   __v: number;
+}
+
+type ImageDataTypes = {
+  uri: string;
+  imageType: string;
+  fileName: string;
 }
 
 type AuthState = {
@@ -43,9 +49,11 @@ type AuthState = {
   Signup: (signup: SignupData) => Promise<void>;
 
   Logout: () => Promise<void>;
+
+  editProfileImage: (ImageDataTypes:ImageDataTypes) => Promise<void>;
 };
 
-export const useAuthStore = create<AuthState>((set) => ({
+export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   loading: false,
   authChecked: false,
@@ -88,7 +96,6 @@ export const useAuthStore = create<AuthState>((set) => ({
       } else {
         console.log("error logging in", error);
       }
-      
     } finally {
       set({ loading: false });
     }
@@ -120,7 +127,6 @@ export const useAuthStore = create<AuthState>((set) => ({
       } else {
         console.log("error signing in", error);
       }
-      
     } finally {
       set({ loading: false });
     }
@@ -152,9 +158,41 @@ export const useAuthStore = create<AuthState>((set) => ({
       } else {
         console.log("error logging out", error);
       }
-      
     } finally {
       set({ loading: false });
     }
   },
+
+  editProfileImage: async (ImageData:ImageDataTypes) => {
+    try {
+      set({ loading: true });
+
+      const formData = new FormData();
+      formData.append("image", {
+        uri: ImageData.uri,
+        type: ImageData.imageType, 
+        name: ImageData.fileName,
+      } as any);
+
+      const res = await axiosInstance.patch(
+        "/users/edit-profile-image",
+        formData, {
+          headers: { Accept: "application/json"}
+        }
+      );
+
+      set({ user: res.data });
+
+      Toast.show({
+        type: "success",
+        text1: "Profile updated!",
+        text2: "Your profile picture has been changed.",
+      });
+    } catch (error) {
+      console.log("Error editing the image", error);
+    } finally {
+      set({ loading: false });
+    }
+  },
+
 }));

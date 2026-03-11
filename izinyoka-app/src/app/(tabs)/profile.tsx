@@ -35,7 +35,7 @@ const Profile = () => {
 
   const backupImg = require("../../../assets/images/backup-img.png");
 
-  const img = user?.profilePic.secure_url;
+  const img = user?.profilePic?.secure_url;
 
   return (
     <ThemedView safe={true} className="flex-1">
