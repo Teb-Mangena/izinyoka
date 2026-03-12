@@ -8,14 +8,13 @@ import ThemedView from '../../themes/ThemedView';
 import ThemedText from '../../themes/ThemedText';
 
 const PersonalInfo = () => {
-  const { user, editProfileImage, loading } = useAuthStore();
+  const { user, editProfileImage, loading, updateProfile } = useAuthStore();
 
   const backupImg = require("../../../../assets/images/backup-img.png");
 
   const [formData, setFormData] = useState({
     name: user?.name || '',
     surname: user?.surname || '',
-    email: user?.email || '',
   });
 
   // Decide which image source to use
@@ -23,9 +22,15 @@ const PersonalInfo = () => {
     ? { uri: user.profilePic.secure_url } 
     : backupImg;
 
-  const handleUpdate = () => {
-    // Logic for updating name/surname would go here
-    console.log('Updating text data:', formData);
+  const updateConfirmation = () => {
+    Alert.alert("Updates", "You are about to change your details", [
+      {text:'Cancel', style: 'cancel'},
+      {text:'Change', onPress: handleUpdate},
+    ])
+  }
+
+  const handleUpdate = () => { 
+    updateProfile(formData);
   };
 
   const pickImage = async () => {
@@ -125,7 +130,7 @@ const PersonalInfo = () => {
           <View>
             <ThemedText className="mb-2 ml-1 font-semibold opacity-70">Email Address</ThemedText>
             <TextInput
-              value={formData.email}
+              value={user?.email}
               editable={false}
               className="bg-slate-200/50 dark:bg-slate-800/50 p-4 rounded-2xl text-slate-500 border border-slate-200 dark:border-slate-700"
             />
@@ -134,7 +139,7 @@ const PersonalInfo = () => {
 
         <View className="px-6 mt-10">
           <TouchableOpacity 
-            onPress={handleUpdate}
+            onPress={updateConfirmation}
             activeOpacity={0.8}
             className="bg-blue-600 p-4 rounded-2xl items-center shadow-lg shadow-blue-400"
           >

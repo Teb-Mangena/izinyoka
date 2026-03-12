@@ -121,7 +121,7 @@ const PrivacySecurityScreen = () => {
             <SecurityRow 
               icon="trash-outline" 
               title={loading ? "Deleting your account..." : "Delete Account"} 
-              subtitle="Please be patient while accounting is being deleted"
+              subtitle={loading ? "Please be patient while accounting is being deleted" : "All your data will be deleted"}
               isDestructive={true}
               disabled={loading}
               onPress={handleDeleteAccount} 

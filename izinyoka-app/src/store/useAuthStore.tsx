@@ -53,6 +53,8 @@ type AuthState = {
   deleteAccount: () => Promise<void>;
 
   editProfileImage: (ImageDataTypes: ImageDataTypes) => Promise<void>;
+
+  updateProfile: (data: { name: string; surname: string }) => Promise<void>;
 };
 
 export const useAuthStore = create<AuthState>((set, get) => ({
@@ -211,7 +213,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         },
       );
 
-      if(res.status === 200){
+      if (res.status === 200) {
         Toast.show({
           type: "success",
           text1: "Profile updated!",
@@ -220,11 +222,37 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       }
 
       set({ user: res.data });
-
     } catch (error) {
       console.log("Error editing the image", error);
     } finally {
       set({ loading: false });
     }
   },
+
+  updateProfile: async (data) => {
+  try {
+    set({ loading: true });
+
+    const res = await axiosInstance.patch("/users/edit-user-details", data);
+
+    set({ user: res.data });
+
+    Toast.show({
+      type: "success",
+      text1: "Success",
+      text2: "Profile updated successfully",
+    });
+  } catch (error: any) {
+    const message =
+      error?.response?.data?.message || "Failed to update profile";
+    Toast.show({
+      type: "error",
+      text1: "Update Failed",
+      text2: message,
+    });
+  } finally {
+    set({ loading: false });
+  }
+},
+
 }));
