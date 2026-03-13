@@ -7,6 +7,7 @@ import { ENV } from "./config/env.js";
 import { connectDB } from "./config/db.js";
 
 import userRoutes from "./routes/user.route.js";
+import reportRoutes from "./routes/report.route.js";
 
 const app = express();
 const { PORT } = ENV;
@@ -23,6 +24,7 @@ app.get('/', (req,res) => {
 });
 
 app.use('/api/users', userRoutes);
+app.use('/api/reports', reportRoutes);
 
 // connect DB & listen to server
 connectDB().then(() => {

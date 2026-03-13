@@ -1,0 +1,34 @@
+import mongoose from "mongoose";
+
+const Schema = mongoose.Schema;
+
+const reportSchema = new Schema({
+  image: {
+    public_id: {
+      type: String
+    },
+    secure_url: {
+      type: String
+    },
+  },
+  title: {
+    type: String,
+    required: true
+  },
+  desription: {
+    type: String
+  },
+  location: {
+    type: String,
+    required: true
+  },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
+},{timestamps:true});
+
+const Report = mongoose.model('Report', reportSchema);
+
+export default Report;
