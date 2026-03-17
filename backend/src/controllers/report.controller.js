@@ -6,7 +6,7 @@ export const getMyReports = async (req,res) => {
   try {
     const userId = req.user.id;
 
-    const reports = await Report.find({ userId });
+    const reports = await Report.find({ userId }).sort({ createdAt: -1 });
 
     res.status(200).json(reports);
   } catch (error) {
