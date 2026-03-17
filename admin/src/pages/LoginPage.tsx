@@ -99,13 +99,6 @@ function LoginPage() {
               </Link>
             </p>
           </div>
-
-          {/* Optional: Demo credentials hint */}
-          <div className="mt-4 p-3 bg-blue-50 rounded-lg text-xs text-gray-600">
-            <p className="font-medium text-blue-800 mb-1">Demo credentials:</p>
-            <p>Email: demo@izinyokatracker.com</p>
-            <p>Password: demo123</p>
-          </div>
         </div>
 
         {/* Footer note */}

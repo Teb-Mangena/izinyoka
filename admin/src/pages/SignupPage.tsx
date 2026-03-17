@@ -34,7 +34,7 @@ function SignupPage() {
                   autoComplete="given-name"
                   required
                   className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50 focus:bg-white transition"
-                  placeholder="John"
+                  placeholder="Enter your name"
                 />
               </div>
             </div>
@@ -55,7 +55,7 @@ function SignupPage() {
                   autoComplete="family-name"
                   required
                   className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50 focus:bg-white transition"
-                  placeholder="Doe"
+                  placeholder="Enter your surname"
                 />
               </div>
             </div>
