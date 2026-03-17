@@ -22,6 +22,19 @@ const reportSchema = new Schema({
     type: String,
     required: true
   },
+  AIVerified: {
+    feedback: {
+      type: String
+    },
+    verified: {
+      type: Boolean
+    }
+  },
+  status: {
+    type: String,
+    enum: ["pending","rejected","resolved"],
+    default: "pending",
+  },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",

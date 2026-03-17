@@ -1,4 +1,5 @@
 import { uploadFromBuffer } from "../lib/cloudinary.js";
+import { verifyImage } from "../lib/gemini.js";
 import Report from "../models/report.model.js";
 
 export const getMyReports = async (req,res) => {
@@ -41,16 +42,29 @@ export const postReport = async (req,res) => {
 
     if(!title || !location) return res.status(400).json({ message: "Title and location are required" });
 
-    let imageUrl = null;
+    let imageData = null;
     if(req.file && req.file.buffer){
-      imageUrl = await uploadFromBuffer(req.file.buffer);
+      imageData = await uploadFromBuffer(req.file.buffer);
+    }
+
+    // AI verifies izinyoka images
+    let AIVerified = {};
+
+    const imageVerified = await verifyImage(imageData.secure_url);
+
+    if(imageVerified) {
+      AIVerified = {
+        feedback: imageVerified,
+        verified: true
+      }
     }
 
     const createdReport = await Report.create({
       title,
       location,
       description,
-      image:imageUrl,
+      image:imageData,
+      AIVerified,
       userId,
     })
 
