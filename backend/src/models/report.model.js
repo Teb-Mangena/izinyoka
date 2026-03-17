@@ -15,7 +15,7 @@ const reportSchema = new Schema({
     type: String,
     required: true
   },
-  desription: {
+  description: {
     type: String
   },
   location: {

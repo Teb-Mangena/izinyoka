@@ -3,6 +3,11 @@ interface ReportImage {
   secure_url: string;
 }
 
+interface AIVerifiedReview {
+  feedback: string;
+  verified: string;
+}
+
 export interface Report {
   _id: string;
   title: string;
@@ -14,4 +19,5 @@ export interface Report {
   updatedAt: string;
   __v: number;
   status?: string;
+  AIVerified: AIVerifiedReview;
 }

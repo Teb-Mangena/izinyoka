@@ -1,8 +1,7 @@
-import React, { useCallback } from "react";
 import { ActivityIndicator, FlatList, TouchableOpacity, View } from "react-native";
 import { Image } from "expo-image";
 import { useQuery } from "@tanstack/react-query";
-import { useFocusEffect } from "@react-navigation/native";
+import { useRouter } from "expo-router";
 
 import { axiosInstance } from "@/src/config/axios";
 import { Report } from "@/src/types/reports";
@@ -11,9 +10,19 @@ import ThemedText from "@/src/components/themes/ThemedText";
 import ThemedView from "@/src/components/themes/ThemedView";
 
 
+// 1. UPDATE THE FETCH FUNCTION TO CATCH 404s
 const getMyReports = async (): Promise<Report[]> => {
-  const res = await axiosInstance.get<Report[]>("/reports/my");
-  return res.data;
+  try {
+    const res = await axiosInstance.get<Report[]>("/reports/my");
+    return res.data;
+  } catch (error: any) {
+    // If the server returns a 404, just return an empty array instead of crashing
+    if (error.response && error.response.status === 404) {
+      return [];
+    }
+    // If it's a real server crash (500), throw it so the ErrorState catches it
+    throw error;
+  }
 };
 
 const formatDate = (date: string) =>
@@ -24,8 +33,14 @@ const formatDate = (date: string) =>
   });
 
 const Reports = () => {
-  // 1. THE QUERY WITH POLLING
-  const { data, isPending, error, refetch } = useQuery({
+  // 2. REMOVE initialData AND USE DESTRUCTURING DEFAULT
+  const { 
+    data = [], // This ensures data is never undefined while loading
+    isPending, 
+    isError, 
+    error, 
+    refetch 
+  } = useQuery({
     queryKey: ["reports"],
     queryFn: getMyReports,
     
@@ -36,16 +51,14 @@ const Reports = () => {
     refetchOnWindowFocus: true,
   });
 
-  // 2. FOCUS-BASED REFRESH
-  useFocusEffect(
-    useCallback(() => {
-      refetch();
-    }, [refetch])
-  );
-
   // 3. RENDER STATES
+  // Now isPending will correctly be true on first load
   if (isPending) return <LoadingState />;
-  if (error) return <ErrorState />;
+  
+  if (isError) {
+    console.error("Query Error:", error);
+    return <ErrorState />;
+  }
 
   return (
     <ThemedView safe={true} className="flex-1">
@@ -56,11 +69,10 @@ const Reports = () => {
             My <ThemedText className="text-primary">Reports</ThemedText>
           </ThemedText>
           <ThemedText className="text-muted-foreground font-medium">
-            {data?.length ?? 0} active cases
+            {data.length} active cases
           </ThemedText>
         </View>
         
-        {/* Manual Refresh Button (Good for user feedback) */}
         <TouchableOpacity 
           onPress={() => refetch()} 
           className="p-2 bg-uiBackground rounded-xl border border-primary/10"
@@ -87,11 +99,15 @@ const Reports = () => {
 
 const ReportCard = ({ report }: { report: Report }) => {
   const status = getStatusStyle(report.status);
+  const router = useRouter();
 
   return (
     <TouchableOpacity
       className="bg-uiBackground rounded-3xl p-4 border border-primary/5 shadow-sm active:scale-[0.98]"
-      onPress={() => console.log("Report pressed", report._id)}
+      onPress={() => router.push({
+        pathname: '/report-detail/[id]',
+        params: { id: report._id }
+      })}
     >
       <View className="flex-row items-center">
         <Image
