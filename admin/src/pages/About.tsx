@@ -24,9 +24,9 @@ function About() {
   ];
 
   const stats = [
-    { value: "10K+", label: "Reports Filed" },
+    { value: "0+", label: "Reports Filed" },
     { value: "95%", label: "AI Accuracy" },
-    { value: "500+", label: "Verified Cases" },
+    { value: "0+", label: "Verified Cases" },
     { value: "24/7", label: "Monitoring" },
   ];
 
