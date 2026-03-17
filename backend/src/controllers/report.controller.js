@@ -7,10 +7,6 @@ export const getMyReports = async (req,res) => {
     const userId = req.user.id;
 
     const reports = await Report.find({ userId });
-    
-    if (reports.length === 0) {
-      return res.status(404).json({ message: "You don't have any reports" });
-    }
 
     res.status(200).json(reports);
   } catch (error) {
