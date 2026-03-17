@@ -1,9 +1,10 @@
+import UnauthorizedPage from "../components/HomePage/UnauthorizedPage"
 
 function HomePage() {
 
   return (
     <>
-      <div>HomePage</div>
+      <UnauthorizedPage />
     </>
   )
 }
