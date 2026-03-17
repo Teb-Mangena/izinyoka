@@ -1,152 +1,159 @@
+import React, { useCallback } from "react";
+import { ActivityIndicator, FlatList, TouchableOpacity, View } from "react-native";
 import { Image } from "expo-image";
-import { FlatList, TouchableOpacity, View } from "react-native";
+import { useQuery } from "@tanstack/react-query";
+import { useFocusEffect } from "@react-navigation/native";
 
+import { axiosInstance } from "@/src/config/axios";
+import { Report } from "@/src/types/reports";
 import ThemedIcon from "@/src/components/themes/ThemedIcon";
 import ThemedText from "@/src/components/themes/ThemedText";
 import ThemedView from "@/src/components/themes/ThemedView";
 
-// Mock Data for Reports
-const MOCK_REPORTS = [
-  {
-    id: "INC-8829",
-    date: "14 Feb 2024",
-    location: "Soweto, Zone 4",
-    status: "Pending",
-    image: "https://picsum.photos/id/210/200/200",
-  },
-  {
-    id: "INC-7741",
-    date: "10 Feb 2024",
-    location: "Tembisa, Sect 2",
-    status: "Resolved",
-    image: "https://picsum.photos/id/211/200/200",
-  },
-  {
-    id: "INC-6502",
-    date: "02 Feb 2024",
-    location: "Sandton, Ext 5",
-    status: "Investigating",
-    image: "https://picsum.photos/id/212/200/200",
-  },
-];
+
+const getMyReports = async (): Promise<Report[]> => {
+  const res = await axiosInstance.get<Report[]>("/reports/my");
+  return res.data;
+};
+
+const formatDate = (date: string) =>
+  new Date(date).toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
 
 const Reports = () => {
+  // 1. THE QUERY WITH POLLING
+  const { data, isPending, error, refetch } = useQuery({
+    queryKey: ["reports"],
+    queryFn: getMyReports,
+    
+    // AUTO-UPDATE SETTINGS
+    refetchInterval: 5000,
+    refetchIntervalInBackground: false,
+    staleTime: 0, 
+    refetchOnWindowFocus: true,
+  });
+
+  // 2. FOCUS-BASED REFRESH
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, [refetch])
+  );
+
+  // 3. RENDER STATES
+  if (isPending) return <LoadingState />;
+  if (error) return <ErrorState />;
+
   return (
     <ThemedView safe={true} className="flex-1">
-      {/* 1. HEADER & FILTER */}
-      <ThemedView className="px-6 pt-4 pb-2 flex-row justify-between items-end">
+      {/* Header Section */}
+      <View className="px-6 pt-4 pb-2 flex-row justify-between items-end">
         <View>
           <ThemedText title={true} className="text-3xl font-black">
             My <ThemedText className="text-primary">Reports</ThemedText>
           </ThemedText>
           <ThemedText className="text-muted-foreground font-medium">
-            Tracking {MOCK_REPORTS.length} active cases
+            {data?.length ?? 0} active cases
           </ThemedText>
         </View>
-        <TouchableOpacity className="p-2 bg-uiBackground rounded-xl border border-primary/10">
-          <ThemedIcon name="filter-outline" size={20} />
+        
+        {/* Manual Refresh Button (Good for user feedback) */}
+        <TouchableOpacity 
+          onPress={() => refetch()} 
+          className="p-2 bg-uiBackground rounded-xl border border-primary/10"
+        >
+          <ThemedIcon name="refresh-circle-outline" size={20} />
         </TouchableOpacity>
-      </ThemedView>
+      </View>
 
-      {/* 2. REPORTS LIST */}
+      {/* Reports List */}
       <FlatList
-        data={MOCK_REPORTS}
-        keyExtractor={(item) => item.id}
+        data={data}
+        keyExtractor={(item) => item._id}
         contentContainerStyle={{ padding: 24, gap: 16 }}
         renderItem={({ item }) => <ReportCard report={item} />}
-        ListEmptyComponent={
-          <ThemedView className="items-center justify-center mt-20">
-            <ThemedIcon
-              name="document-text-outline"
-              size={60}
-              className="opacity-20"
-            />
-            <ThemedText className="mt-4 text-muted-foreground">
-              No reports found yet.
-            </ThemedText>
-          </ThemedView>
-        }
+        ListEmptyComponent={<EmptyState />}
+        onRefresh={refetch}
+        refreshing={isPending}
       />
     </ThemedView>
   );
 };
 
-// Sub-component for individual Report Cards
-const ReportCard = ({ report }: { report: (typeof MOCK_REPORTS)[0] }) => {
-  // Logic for status colors
-  const getStatusStyle = (status: string) => {
-    switch (status) {
-      case "Resolved":
-        return {
-          bg: "bg-green-500/10",
-          text: "text-green-500",
-          icon: "checkmark-circle",
-        };
-      case "Investigating":
-        return {
-          bg: "bg-primary/10",
-          text: "text-primary",
-          icon: "search-outline",
-        };
-      default:
-        return {
-          bg: "bg-warning/10",
-          text: "text-warning",
-          icon: "time-outline",
-        };
-    }
-  };
+// --- SUB-COMPONENTS ---
 
-  const statusStyle = getStatusStyle(report.status);
+const ReportCard = ({ report }: { report: Report }) => {
+  const status = getStatusStyle(report.status);
 
   return (
     <TouchableOpacity
-      className="bg-uiBackground rounded-3xl p-4 border border-primary/5 shadow-sm active:scale-[0.98] transition-all"
-      onPress={() => console.log("Report pressed", report.id)}
+      className="bg-uiBackground rounded-3xl p-4 border border-primary/5 shadow-sm active:scale-[0.98]"
+      onPress={() => console.log("Report pressed", report._id)}
     >
       <View className="flex-row items-center">
-        {/* Evidence Thumbnail */}
         <Image
-          source={{ uri: report.image }}
+          source={{ uri: report.image.secure_url }}
           style={{ width: 70, height: 70, borderRadius: 16 }}
           contentFit="cover"
         />
 
         <View className="flex-1 ml-4">
           <View className="flex-row justify-between items-start">
-            <ThemedText className="font-bold text-lg">{report.id}</ThemedText>
-            {/* Custom Status Badge */}
-            <View
-              className={`${statusStyle.bg} px-3 py-1 rounded-full flex-row items-center`}
-            >
-              <ThemedText
-                className={`${statusStyle.text} text-[10px] font-black uppercase tracking-tighter`}
-              >
-                {report.status}
+            <ThemedText className="font-bold text-lg">{report.title}</ThemedText>
+            <View className={`${status.bg} px-3 py-1 rounded-full`}>
+              <ThemedText className={`${status.text} text-[10px] font-black uppercase`}>
+                {report.status ?? "Pending"}
               </ThemedText>
             </View>
           </View>
 
           <View className="flex-row items-center mt-1">
-            <ThemedIcon
-              name="location-outline"
-              size={14}
-              className="opacity-50"
-            />
-            <ThemedText className="text-muted-foreground text-xs ml-1 font-medium">
-              {report.location}
-            </ThemedText>
+            <ThemedIcon name="location-outline" size={14} className="opacity-50" />
+            <ThemedText className="text-muted-foreground text-xs ml-1">{report.location}</ThemedText>
           </View>
 
-          <View className="flex-row items-center mt-2">
-            <ThemedText className="text-[10px] text-muted-foreground/60 font-bold">
-              SUBMITTED: {report.date}
-            </ThemedText>
-          </View>
+          <ThemedText className="text-[10px] text-muted-foreground/60 font-bold mt-2">
+            SUBMITTED: {formatDate(report.createdAt)}
+          </ThemedText>
         </View>
       </View>
     </TouchableOpacity>
   );
 };
+
+// --- CONSTANTS & UI HELPERS ---
+
+const getStatusStyle = (status?: string) => {
+  const styles = {
+    Resolved: { bg: "bg-green-500/10", text: "text-green-500" },
+    Investigating: { bg: "bg-primary/10", text: "text-primary" },
+    default: { bg: "bg-warning/10", text: "text-warning" },
+  };
+  return styles[status as keyof typeof styles] || styles.default;
+};
+
+const LoadingState = () => (
+  <ThemedView safe className="flex-1 items-center justify-center">
+    <ActivityIndicator size="large" color="#4A90E2" />
+    <ThemedText className="mt-4 text-muted-foreground">Loading reports...</ThemedText>
+  </ThemedView>
+);
+
+const ErrorState = () => (
+  <ThemedView safe className="flex-1 items-center justify-center">
+    <ThemedIcon name="alert-circle-outline" size={50} className="text-red-500" />
+    <ThemedText className="mt-4 text-red-500">Failed to load reports</ThemedText>
+  </ThemedView>
+);
+
+const EmptyState = () => (
+  <ThemedView className="items-center justify-center mt-20">
+    <ThemedIcon name="document-text-outline" size={60} className="opacity-20" />
+    <ThemedText className="mt-4 text-muted-foreground">No reports found yet.</ThemedText>
+  </ThemedView>
+);
 
 export default Reports;
