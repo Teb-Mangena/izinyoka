@@ -3,6 +3,8 @@ import bcrypt from "bcryptjs";
 import User from "../models/user.model.js";
 import { genToken } from "../config/genToken.js";
 import cloudinary, { uploadFromBuffer } from "../lib/cloudinary.js";
+import { sendWelcomeEmail } from "../emails/emailHandler.js";
+import { ENV } from "../config/env.js";
 
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -93,6 +95,12 @@ export const signupUser = async (req, res) => {
 
     // save user to the DB
     await user.save();
+
+    try {
+      await sendWelcomeEmail(email,name,ENV.CLIENT_URL);
+    } catch (error) {
+      console.log(error);
+    }
 
     res.status(201).json({
       message: "Account registered successfully",
