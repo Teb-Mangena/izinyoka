@@ -13,7 +13,7 @@ function Footer() {
   const contactInfo = [
     { icon: <MapPin size={18} />, text: "123 Business Ave, Johannesburg, SA" },
     { icon: <Phone size={18} />, text: "+27 11 234 5678" },
-    { icon: <Mail size={18} />, text: "info@izinyokatracker.com" },
+    { icon: <Mail size={18} />, text: "info@applicationdev.org" },
   ];
 
   const socialLinks = [

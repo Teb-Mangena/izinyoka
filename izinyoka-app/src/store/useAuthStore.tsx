@@ -230,29 +230,29 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   updateProfile: async (data) => {
-  try {
-    set({ loading: true });
+    try {
+      set({ loading: true });
 
-    const res = await axiosInstance.patch("/users/edit-user-details", data);
+      const res = await axiosInstance.patch("/users/edit-user-details", data);
 
-    set({ user: res.data });
+      set({ user: res.data });
 
-    Toast.show({
-      type: "success",
-      text1: "Success",
-      text2: "Profile updated successfully",
-    });
-  } catch (error: any) {
-    const message =
-      error?.response?.data?.message || "Failed to update profile";
-    Toast.show({
-      type: "error",
-      text1: "Update Failed",
-      text2: message,
-    });
-  } finally {
-    set({ loading: false });
-  }
-},
+      Toast.show({
+        type: "success",
+        text1: "Success",
+        text2: "Profile updated successfully",
+      });
+    } catch (error: any) {
+      const message =
+        error?.response?.data?.message || "Failed to update profile";
+      Toast.show({
+        type: "error",
+        text1: "Update Failed",
+        text2: message,
+      });
+    } finally {
+      set({ loading: false });
+    }
+  },
 
 }));

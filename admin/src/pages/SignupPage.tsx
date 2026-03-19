@@ -1,7 +1,22 @@
 import { Link } from "react-router";
 import { User, Mail, Lock, UserPlus } from "lucide-react";
+import { useAuthStore } from "../store/useAuthStore";
+import React, { useState } from "react";
 
 function SignupPage() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
+
+  const { signup, loading } = useAuthStore();
+
+  const handleSignup = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    signup({ name,surname,email, password });
+  };
+
   return (
     <div className="min-h-[80vh] flex items-center justify-center bg-linear-to-b from-blue-50 to-white py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full">
@@ -17,10 +32,13 @@ function SignupPage() {
 
         {/* Signup Card */}
         <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-          <form className="space-y-5">
+          <form onSubmit={handleSignup} className="space-y-5">
             {/* Name Field */}
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Name
               </label>
               <div className="relative">
@@ -35,13 +53,18 @@ function SignupPage() {
                   required
                   className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50 focus:bg-white transition"
                   placeholder="Enter your name"
+                  onChange={(e) => setName(e.target.value)}
+                  value={name}
                 />
               </div>
             </div>
 
             {/* Surname Field */}
             <div>
-              <label htmlFor="surname" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="surname"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Surname
               </label>
               <div className="relative">
@@ -56,13 +79,18 @@ function SignupPage() {
                   required
                   className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50 focus:bg-white transition"
                   placeholder="Enter your surname"
+                  onChange={(e) => setSurname(e.target.value)}
+                  value={surname}
                 />
               </div>
             </div>
 
             {/* Email Field */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Email address
               </label>
               <div className="relative">
@@ -77,13 +105,18 @@ function SignupPage() {
                   required
                   className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50 focus:bg-white transition"
                   placeholder="you@example.com"
+                  onChange={(e) => setEmail(e.target.value)}
+                  value={email}
                 />
               </div>
             </div>
 
             {/* Password Field */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Password
               </label>
               <div className="relative">
@@ -98,6 +131,8 @@ function SignupPage() {
                   required
                   className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50 focus:bg-white transition"
                   placeholder="••••••••"
+                  onChange={(e) => setPassword(e.target.value)}
+                  value={password}
                 />
               </div>
             </div>
@@ -115,12 +150,18 @@ function SignupPage() {
               </div>
               <div className="ml-3 text-sm">
                 <label htmlFor="terms" className="text-gray-600">
-                  I agree to the{' '}
-                  <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
+                  I agree to the{" "}
+                  <a
+                    href="#"
+                    className="font-medium text-blue-600 hover:text-blue-500"
+                  >
                     Terms of Service
-                  </a>{' '}
-                  and{' '}
-                  <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
+                  </a>{" "}
+                  and{" "}
+                  <a
+                    href="#"
+                    className="font-medium text-blue-600 hover:text-blue-500"
+                  >
                     Privacy Policy
                   </a>
                 </label>
@@ -132,16 +173,26 @@ function SignupPage() {
               type="submit"
               className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition"
             >
-              <UserPlus className="h-5 w-5 mr-2" />
-              Sign up
+              {loading ? (
+                <p>Registering...</p>
+                ) : (
+                  <>
+                    <UserPlus className="h-5 w-5 mr-2" />
+                    Sign up
+                  </>
+                )
+              }
             </button>
           </form>
 
           {/* Login link */}
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
-              Already have an account?{' '}
-              <Link to="/login" className="font-medium text-blue-600 hover:text-blue-500">
+              Already have an account?{" "}
+              <Link
+                to="/login"
+                className="font-medium text-blue-600 hover:text-blue-500"
+              >
                 Sign in
               </Link>
             </p>

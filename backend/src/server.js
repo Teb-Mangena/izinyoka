@@ -11,9 +11,13 @@ import reportRoutes from "./routes/report.route.js";
 
 const app = express();
 const { PORT } = ENV;
+const allowedOrigins = [
+  "http://localhost:5173",
+  ENV.CLIENT_URL
+];
 
 // Middlewares
-app.use(cors({ origin: "*", credentials: true }));
+app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.json({limit:"10mb"}));
 app.use(cookieParser());
 app.use(morgan('dev'));

@@ -1,7 +1,20 @@
 import { Link } from "react-router";
 import { Mail, Lock, LogIn } from "lucide-react";
+import React, { useState } from "react";
+import { useAuthStore } from "../store/useAuthStore";
 
 function LoginPage() {
+  const [email,setEmail] = useState('');
+  const [password,setPassword] = useState('');
+
+  const {login, loading} = useAuthStore();
+
+  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    login({email, password});
+  }
+
   return (
     <div className="min-h-[80vh] flex items-center justify-center bg-linear-to-b from-blue-50 to-white py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full">
@@ -17,7 +30,7 @@ function LoginPage() {
 
         {/* Login Card */}
         <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-          <form className="space-y-6">
+          <form className="space-y-6" onSubmit={handleLogin}>
             {/* Email Field */}
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
@@ -35,6 +48,8 @@ function LoginPage() {
                   required
                   className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50 focus:bg-white transition"
                   placeholder="you@example.com"
+                  onChange={(e) => setEmail(e.target.value)}
+                  value={email}
                 />
               </div>
             </div>
@@ -56,6 +71,8 @@ function LoginPage() {
                   required
                   className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50 focus:bg-white transition"
                   placeholder="••••••••"
+                  onChange={(e) => setPassword(e.target.value)}
+                  value={password}
                 />
               </div>
             </div>
@@ -85,8 +102,14 @@ function LoginPage() {
               type="submit"
               className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition"
             >
-              <LogIn className="h-5 w-5 mr-2" />
-              Sign in
+              {loading ? (
+                <p>Logging in...</p>
+                ) : (
+                <>
+                  <LogIn className="h-5 w-5 mr-2" />
+                  Sign in
+                </>
+              )}
             </button>
           </form>
 
