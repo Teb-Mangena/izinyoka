@@ -49,7 +49,7 @@ function AdminDashboard() {
     console.log("Admin dashboard loaded");
   }, []);
 
-  const getStatusBadge = (status) => {
+  const getStatusBadge = (status: string) => {
     switch (status) {
       case "pending":
         return (

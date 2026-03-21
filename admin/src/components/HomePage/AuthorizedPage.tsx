@@ -66,14 +66,14 @@ function AuthorizedPage() {
   };
 
   // Handle delete (mock)
-  const handleDelete = (id) => {
+  const handleDelete = (id:string) => {
     if (window.confirm("Are you sure you want to delete this report?")) {
       setReports(reports.filter(r => r.id !== id));
     }
   };
 
   // Get status badge component
-  const getStatusBadge = (status) => {
+  const getStatusBadge = (status:string) => {
     switch (status) {
       case "pending":
         return (
@@ -188,7 +188,7 @@ function AuthorizedPage() {
               <tbody className="bg-white divide-y divide-gray-200">
                 {reports.length === 0 ? (
                   <tr>
-                    <td colSpan="6" className="px-6 py-12 text-center text-gray-500">
+                    <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
                       <FileText className="h-12 w-12 mx-auto text-gray-400 mb-3" />
                       <p>You haven't submitted any reports yet.</p>
                       <Link
