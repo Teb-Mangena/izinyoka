@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { 
   FileText, 
   CheckCircle, 
@@ -14,21 +14,21 @@ import { Link } from "react-router";
 
 function AdminDashboard() {
   // Mock data for stats
-  const [stats, setStats] = useState({
+  const stats = {
     totalReports: 245,
     pendingReview: 32,
     verified: 178,
     users: 1240,
-  });
+  };
 
   // Mock data for recent reports
-  const [reports, setReports] = useState([
+  const reports = [
     { id: "REP-001", location: "Makhanda, Eastern Cape", status: "pending", date: "2025-03-20" },
     { id: "REP-002", location: "Port Elizabeth, Eastern Cape", status: "verified", date: "2025-03-19" },
     { id: "REP-003", location: "East London, Eastern Cape", status: "pending", date: "2025-03-18" },
     { id: "REP-004", location: "Queenstown, Eastern Cape", status: "verified", date: "2025-03-17" },
     { id: "REP-005", location: "Grahamstown, Eastern Cape", status: "rejected", date: "2025-03-16" },
-  ]);
+  ];
 
   // Mock chart data (reports per day)
   const chartData = [
