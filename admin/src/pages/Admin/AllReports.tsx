@@ -23,6 +23,8 @@ function AllReports() {
 
   if (loading) return <PageLoader />;
 
+  console.log(reports);
+
   // Helper to get status badge styling
   const getStatusBadge = (status: string) => {
     const statusLower = status?.toLowerCase();
