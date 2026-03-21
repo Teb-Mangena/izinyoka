@@ -11,6 +11,13 @@ interface AIDetailsType {
   verified: boolean;
 }
 
+interface UserDetailsType {
+  _id: string;
+  name: string;
+  surname: string;
+  email: string;
+}
+
 interface ReportType {
   image: ImageType;
   AIVerified: AIDetailsType;
@@ -19,7 +26,7 @@ interface ReportType {
   description: string;
   location: string;
   status: string;
-  userId: string;
+  userId: UserDetailsType;
   createdAt: string;
   updatedAt: string;
   __v: number;

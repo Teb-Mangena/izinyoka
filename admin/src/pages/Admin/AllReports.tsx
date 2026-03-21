@@ -118,6 +118,11 @@ function AllReports() {
                     {report.description}
                   </p>
 
+                  <div className="flex items-center text-gray-500 text-sm mb-2">
+                    <MapPin className="h-4 w-4 mr-1" />
+                    Posted by : <span className="truncate">{report.userId?.name} {" "} {report.userId?.surname}</span>
+                  </div>
+
                   {/* Location */}
                   <div className="flex items-center text-gray-500 text-sm mb-2">
                     <MapPin className="h-4 w-4 mr-1" />
@@ -129,24 +134,6 @@ function AllReports() {
                     <Calendar className="h-4 w-4 mr-1" />
                     <span>{formatDate(report.createdAt)}</span>
                   </div>
-
-                  {/* AI Verification Feedback */}
-                  {/* {report.AIVerified && (
-                    <div className={`mt-3 p-2 rounded-md text-xs ${
-                      report.AIVerified.verified 
-                        ? 'bg-green-50 text-green-700' 
-                        : 'bg-yellow-50 text-yellow-700'
-                    }`}>
-                      <div className="flex items-start">
-                        {report.AIVerified.verified ? (
-                          <CheckCircle className="h-3 w-3 mr-1 mt-0.5 shrink-0" />
-                        ) : (
-                          <XCircle className="h-3 w-3 mr-1 mt-0.5 shrink-0" />
-                        )}
-                        <span>{report.AIVerified.feedback || "No AI feedback provided."}</span>
-                      </div>
-                    </div>
-                  )} */}
 
                   {/* View Details Button */}
                   <div className="mt-4">
