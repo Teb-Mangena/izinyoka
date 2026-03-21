@@ -1,51 +1,63 @@
-import { Navigate, Route, Routes } from "react-router"
-import { Toaster } from "react-hot-toast"
-import { useAuthStore } from "./store/useAuthStore"
+import { useEffect } from "react";
+import { Navigate, Route, Routes } from "react-router";
+import { Toaster } from "react-hot-toast";
+import { useAuthStore } from "./store/useAuthStore";
 
-import HomePage from "./pages/HomePage"
-import About from "./pages/About"
-import Navbar from "./components/Navbar"
-import Footer from "./components/Footer"
-import SignupPage from "./pages/SignupPage"
-import LoginPage from "./pages/LoginPage"
-import ErrorPage from "./pages/ErrorPage"
-import { useEffect } from "react"
+import HomePage from "./pages/HomePage";
+import About from "./pages/About";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+import SignupPage from "./pages/SignupPage";
+import LoginPage from "./pages/LoginPage";
+import ErrorPage from "./pages/ErrorPage";
+import PageLoader from "./components/PageLoader";
 
 function App() {
-  const {checkAuth,user,authChecked} = useAuthStore();
+  const { checkAuth, user, authChecked } = useAuthStore();
 
   useEffect(() => {
     checkAuth();
-  },[checkAuth]);
-
-  if(!authChecked) return <div>Loading...</div>
+  }, [checkAuth]);
 
   console.log(user);
 
   return (
     <div>
       <Navbar />
-      <Routes>
-        {/* PUBLIC ROUTES */}
-        <Route index element={<HomePage />} />
-        <Route path="about" element={<About />} />
-        <Route path="sign-up" element={<SignupPage />} />
+      {!authChecked ? (
+        <PageLoader />
+      ) : (
+        <Routes>
+          {/* PUBLIC ROUTES */}
+          <Route 
+            index 
+            element={<HomePage />} 
+          />
 
-        {/* PROTECTED ROUTE */}
-        <Route 
-          path="login" 
-          element={
-            !user ? <LoginPage /> : <Navigate to={'/'} />
-          } 
-        />
+          <Route 
+            path="about" 
+            element={<About />} 
+          />
 
-        {/* Fall-back */}
-        <Route path="*" element={<ErrorPage />} />
-      </Routes>
+          {/* PROTECTED ROUTE */}
+          <Route
+            path="login"
+            element={!user ? <LoginPage /> : <Navigate to={"/"} />}
+          />
+
+          <Route 
+            path="sign-up" 
+            element={!user ? <SignupPage /> : <Navigate to={"/"} />} 
+          />
+
+          {/* Fall-back */}
+          <Route path="*" element={<ErrorPage />} />
+        </Routes>
+      )}
       <Toaster />
       <Footer />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
