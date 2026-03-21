@@ -10,6 +10,7 @@ import {
   TrendingUp,
   Filter
 } from "lucide-react";
+import { Link } from "react-router";
 
 function AdminDashboard() {
   // Mock data for stats
@@ -197,7 +198,7 @@ function AdminDashboard() {
               </table>
             </div>
             <div className="mt-4 text-right">
-              <a href="#" className="text-sm text-blue-600 hover:text-blue-800">View all reports →</a>
+              <Link to="/all-reports" className="text-sm text-blue-600 hover:text-blue-800">View all reports →</Link>
             </div>
           </div>
         </div>

@@ -11,6 +11,8 @@ import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
 import ErrorPage from "./pages/ErrorPage";
 import PageLoader from "./components/PageLoader";
+import AllReports from "./pages/Admin/AllReports";
+import ReportDetails from "./pages/Admin/ReportDetails";
 
 function App() {
   const { checkAuth, user, authChecked } = useAuthStore();
@@ -48,6 +50,17 @@ function App() {
           <Route 
             path="sign-up" 
             element={!user ? <SignupPage /> : <Navigate to={"/"} />} 
+          />
+
+          {/* ADMIN ROUTES */}
+          <Route 
+            path="all-reports" 
+            element={user ? <AllReports /> : <Navigate to={"/login"} />} 
+          />
+
+          <Route 
+            path="/report/:id" 
+            element={user ? <ReportDetails /> : <Navigate to={"/login"} />} 
           />
 
           {/* Fall-back */}

@@ -35,7 +35,7 @@ const reportSchema = new Schema({
     enum: ["pending","rejected","resolved"],
     default: "pending",
   },
-  userId: {
+  user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,

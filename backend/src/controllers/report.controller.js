@@ -74,7 +74,7 @@ export const postReport = async (req,res) => {
 
 export const getReports = async (req,res) => {
   try {
-    const reports = await Report.find();
+    const reports = await Report.find().populate('userId','name surname email');
 
     res.status(200).json(reports);
   } catch (error) {
