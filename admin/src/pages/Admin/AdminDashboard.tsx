@@ -41,7 +41,7 @@ function AdminDashboard() {
   };
 
   const reports = reps.slice(0, 5);
-  const pendingReports = reps.slice(0,10);
+  const pendingReports = reps.slice(0, 10);
 
   const weekdays: string[] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
@@ -284,7 +284,9 @@ function AdminDashboard() {
             <h2 className="text-lg font-semibold text-gray-800">
               Pending Reports
             </h2>
-            <p className="text-sm text-slate-500">Only showing first {pendingReports.length} reports</p>
+            <p className="text-sm text-slate-500">
+              Only showing first {pendingReports.length} reports
+            </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {pendingReports
@@ -301,11 +303,14 @@ function AdminDashboard() {
                     <p className="text-sm text-gray-500">
                       #{report._id.slice(-4)} • {report.location}
                     </p>
-                    <p className="text-xs text-green-600 mt-1">
-                      {report.AIVerified?.verified === true
-                        ? "AIVerified ✓"
-                        : "Not AI Verified"}
+                    <p
+                      className={`text-xs mt-1 ${report.AIVerified?.verified ? "text-green-600" : "text-red-500"}`}
+                    >
+                      {report.AIVerified?.verified
+                        ? "AI-Verified"
+                        : "Not AI-Verified"}
                     </p>
+
                     <p className="text-xs text-green-600 mt-1">
                       {getStatusBadge(report.status)}
                     </p>
