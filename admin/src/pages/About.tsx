@@ -1,7 +1,19 @@
 import { Link } from "react-router";
 import { Zap, Shield, Users, Target, Eye, ArrowRight } from "lucide-react";
+import { useReportStore } from "../store/useReportStore";
+import { useEffect } from "react";
 
 function About() {
+  const { getAllReports, reports } = useReportStore();
+  
+  useEffect(() => {
+    getAllReports();
+  }, [ getAllReports]);
+
+  const VerifiedStatus = reports.filter((s) => s.status === "verified").length;
+  const AiVerifiedNum = reports.filter((s) => s.AIVerified?.verified === true).length;
+  const AiPercentage = (AiVerifiedNum / reports.length) * 100;
+
   const features = [
     {
       icon: <Zap className="h-6 w-6 text-blue-600" />,
@@ -24,9 +36,9 @@ function About() {
   ];
 
   const stats = [
-    { value: "0+", label: "Reports Filed" },
-    { value: "95%", label: "AI Accuracy" },
-    { value: "0+", label: "Verified Cases" },
+    { value: `${reports.length}+`, label: "Reports Filed" },
+    { value: `${AiPercentage.toFixed(1)}%`, label: "AI Accuracy" },
+    { value: `${VerifiedStatus}+`, label: "Verified Cases" },
     { value: "24/7", label: "Monitoring" },
   ];
 
@@ -178,23 +190,6 @@ function About() {
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* Call to Action */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-linear-to-r from-blue-600 to-blue-800 text-white">
-        <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-4">Ready to make a difference?</h2>
-          <p className="text-xl mb-8 opacity-90">
-            Join thousands of citizens helping to eradicate illegal connections.
-          </p>
-          <Link
-            to="/sign-up"
-            className="inline-flex items-center px-6 py-3 border-2 border-white text-base font-medium rounded-md text-white hover:bg-white hover:text-blue-600 transition"
-          >
-            Get Started Today
-            <ArrowRight className="ml-2 h-5 w-5" />
-          </Link>
         </div>
       </section>
     </div>

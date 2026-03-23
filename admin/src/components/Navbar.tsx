@@ -6,7 +6,7 @@ import { useAuthStore } from "../store/useAuthStore";
 function Navbar() {
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { user, logout } = useAuthStore();
+  const { user, logout, loading } = useAuthStore();
 
   const navigationLinks = [
     { pageName: "Home", link: "/", icon: <Home size={18} />, id: "1" },
@@ -21,7 +21,7 @@ function Navbar() {
 
   const handleLogout = () => {
     logout();
-  }
+  };
 
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
@@ -58,34 +58,38 @@ function Navbar() {
           </div>
 
           {/* Desktop Auth Buttons (Right) */}
-          <div className="hidden md:flex items-center space-x-2">
-            {user ? (
-              <button
-                onClick={handleLogout}
-                className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-gray-700 hover:text-gray-900 hover:bg-gray-100 transition"
-              >
-                <LogIn size={18} className="mr-2" />
-                Logout
-              </button>
-            ) : (
-              <>
+          {loading ? (
+            ""
+          ) : (
+            <div className="hidden md:flex items-center space-x-2">
+              {user ? (
                 <button
-                  onClick={() => navigate("/login")}
+                  onClick={handleLogout}
                   className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-gray-700 hover:text-gray-900 hover:bg-gray-100 transition"
                 >
                   <LogIn size={18} className="mr-2" />
-                  Login
+                  Logout
                 </button>
-                <button
-                  onClick={() => navigate("/sign-up")}
-                  className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition"
-                >
-                  <UserPlus size={18} className="mr-2" />
-                  Sign Up
-                </button>
-              </>
-            )}
-          </div>
+              ) : (
+                <>
+                  <button
+                    onClick={() => navigate("/login")}
+                    className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-gray-700 hover:text-gray-900 hover:bg-gray-100 transition"
+                  >
+                    <LogIn size={18} className="mr-2" />
+                    Login
+                  </button>
+                  <button
+                    onClick={() => navigate("/sign-up")}
+                    className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition"
+                  >
+                    <UserPlus size={18} className="mr-2" />
+                    Sign Up
+                  </button>
+                </>
+              )}
+            </div>
+          )}
 
           {/* Mobile menu button */}
           <div className="md:hidden flex items-center">
