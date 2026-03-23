@@ -11,14 +11,27 @@ import {
   Filter
 } from "lucide-react";
 import { Link } from "react-router";
+import { useAuthStore } from "../../store/useAuthStore";
+import { useReportStore } from "../../store/useReportStore";
 
 function AdminDashboard() {
+  const {adminGetUsers, users} = useAuthStore()
+  const {getAllReports,reports:reps} = useReportStore();
+
+  useEffect(() => {
+    adminGetUsers();
+    getAllReports();
+  },[adminGetUsers,getAllReports]);
+
+  const PendingStatus = reps.filter((s) => s.status === "pending");
+  const VerifiedStatus = reps.filter((s) => s.status === "verified");
+
   // Mock data for stats
   const stats = {
-    totalReports: 245,
-    pendingReview: 32,
-    verified: 178,
-    users: 1240,
+    totalReports: reps.length,
+    pendingReview: PendingStatus.length,
+    verified: VerifiedStatus.length,
+    users: users.length,
   };
 
   // Mock data for recent reports

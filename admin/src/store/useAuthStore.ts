@@ -34,6 +34,7 @@ interface User {
 
 type AuthState = {
   user: User | null;
+  users: User[];
   loading: boolean;
   authChecked: boolean;
 
@@ -41,10 +42,12 @@ type AuthState = {
   login: (login: LoginData) => Promise<void>;
   signup: (signup: SignupData) => Promise<void>;
   logout: () => Promise<void>;
+  adminGetUsers: () => Promise<void>;
 };
 
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,
+  users: [],
   loading: false,
   authChecked: false,
 
@@ -110,4 +113,20 @@ export const useAuthStore = create<AuthState>((set) => ({
       set({ loading: false });
     }
   },
+
+  adminGetUsers: async () => {
+    try {
+      set({ loading: true });
+
+      const res = await axiosInstance.get('/users');
+
+      set({ users: res.data });
+
+    } catch (error) {
+      console.log(error);
+    } finally {
+      set({ loading: false });
+    }
+  },
+
 }));

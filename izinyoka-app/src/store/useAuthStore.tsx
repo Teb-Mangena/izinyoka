@@ -55,6 +55,7 @@ type AuthState = {
   editProfileImage: (ImageDataTypes: ImageDataTypes) => Promise<void>;
 
   updateProfile: (data: { name: string; surname: string }) => Promise<void>;
+
 };
 
 export const useAuthStore = create<AuthState>((set, get) => ({
