@@ -43,9 +43,20 @@ function AdminDashboard() {
   const reports = reps.slice(0, 5);
   const pendingReports = reps.slice(0, 10);
 
-  const weekdays: string[] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  // Get start of current week (Monday)
+  const now = new Date();
+  const startOfWeek = new Date(now);
+  startOfWeek.setDate(now.getDate() - now.getDay() + 1); // Monday as start
+  startOfWeek.setHours(0, 0, 0, 0);
 
-  const countsByDay: Record<string, number> = reps.reduce(
+  // Filter reports to only those created this week
+  const reportsThisWeek = reps.filter((report) => {
+    const created = new Date(report.createdAt);
+    return created >= startOfWeek && created <= now;
+  });
+
+  // Count by weekday
+  const countsByDay: Record<string, number> = reportsThisWeek.reduce(
     (acc, report) => {
       const day = new Date(report.createdAt).toLocaleDateString("en-US", {
         weekday: "short",
@@ -56,6 +67,8 @@ function AdminDashboard() {
     {} as Record<string, number>,
   );
 
+  // Build chart data in weekday order
+  const weekdays: string[] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   const chartData: ChartEntry[] = weekdays.map((day) => ({
     day,
     count: countsByDay[day] || 0,
