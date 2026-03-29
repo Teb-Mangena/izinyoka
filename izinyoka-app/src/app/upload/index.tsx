@@ -171,7 +171,6 @@ const MediaUploads = () => {
     createReportMutation.mutate();
   };
 
-  // The fixed height of your h-56 container in pixels (approx 224px)
   const CONTAINER_HEIGHT = 224;
 
   // 5. RENDER
@@ -435,7 +434,8 @@ const styles = StyleSheet.create({
     height: 3,
     backgroundColor: "#FB923C", // Orange base
     width: "100%",
-    shadowColor: "#FB923C", // Matching orange glow
+    shadowColor: "#FB923C",
+    shadowOffset: { width: 0, height: 0 },
     shadowRadius: 15,
     shadowOpacity: 1,
     elevation: 8,

@@ -9,7 +9,7 @@ const LoadingPage = () => {
 
   useEffect(() => {
     // 2. Set up a looping animation (Pulse effect)
-    Animated.loop(
+    const pulseLoop = Animated.loop(
       Animated.sequence([
         Animated.timing(pulseAnim, {
           toValue: 1.1, // Scale up and full opacity
@@ -22,7 +22,11 @@ const LoadingPage = () => {
           useNativeDriver: true,
         }),
       ])
-    ).start();
+    );
+    pulseLoop.start();
+    return () => {
+      pulseLoop.stop();
+    };
   }, [pulseAnim]);
 
   return (
