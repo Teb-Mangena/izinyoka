@@ -1,7 +1,7 @@
 import { useAuthStore } from "@/src/store/useAuthStore";
 import { useRouter } from "expo-router";
 import { useEffect } from "react";
-import { ActivityIndicator } from "react-native";
+import LoadingPage from "../screens/LoadingPage";
 
 type UserOnlyType = {
   children: React.ReactNode;
@@ -17,10 +17,10 @@ const UserOnly = ({ children }: UserOnlyType) => {
     }
   }, [user, authChecked, router]);
 
-  if (authChecked && user === null) return null;
+  // if (authChecked && user === null) return null;
 
   if (!authChecked || !user) {
-    return <ActivityIndicator size="large" />;
+    return <LoadingPage />;
   }
 
   return children;
