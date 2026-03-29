@@ -118,7 +118,7 @@ const MediaUploads = () => {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <ScrollView 
             className="px-6" 
-            contentContainerStyle={{ flexGrow: 1 }}
+            contentContainerStyle={{ paddingBottom: 100 }}
             keyboardShouldPersistTaps="handled"
           >
             <View className="flex-1 pt-4 pb-10">
