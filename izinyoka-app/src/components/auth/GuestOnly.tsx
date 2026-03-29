@@ -1,7 +1,7 @@
 import { useAuthStore } from "@/src/store/useAuthStore";
 import { useRouter } from "expo-router";
 import { useEffect } from "react";
-import { ActivityIndicator } from "react-native";
+import LoadingPage from "../screens/LoadingPage";
 
 type GuestOnlyType = {
   children: React.ReactNode;
@@ -18,7 +18,7 @@ const GuestOnly = ({ children }: GuestOnlyType) => {
   }, [user, authChecked, router]);
 
   if (!authChecked) {
-    return <ActivityIndicator size="large" />;
+    return <LoadingPage />;
   }
 
   if (user !== null) {
