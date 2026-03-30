@@ -2,6 +2,9 @@ import React, { useEffect, useRef } from 'react';
 import { Text, Animated, StyleSheet } from 'react-native';
 import { Image } from 'expo-image';
 import ThemedView from '../themes/ThemedView';
+import { cssInterop } from 'nativewind';
+
+cssInterop(Image, { className: 'style' });
 
 const LoadingPage = () => {
   const pulseAnim = useRef(new Animated.Value(0.6)).current;
