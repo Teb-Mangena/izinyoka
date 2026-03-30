@@ -23,8 +23,6 @@ function UserManagement() {
     adminGetUsers();
   }, [adminGetUsers]);
 
-  if (loading) return <PageLoader />;
-
   // Helper to get profile picture URL
   const getProfilePicUrl = (profilePic:UserImage | null) => {
     if (!profilePic) return null;
@@ -44,13 +42,18 @@ function UserManagement() {
   });
 
   // Pagination
-  const indexOfLastUser = currentPage * usersPerPage;
+  const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
+  const normalizedTotalPages = totalPages === 0 ? 1 : totalPages;
+  const safeCurrentPage = Math.min(currentPage, normalizedTotalPages);
+  const indexOfLastUser = safeCurrentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
   const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
-  const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
+
+  if (loading) return <PageLoader />;
 
   const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+    const nextPage = Math.min(Math.max(page, 1), normalizedTotalPages);
+    setCurrentPage(nextPage);
   };
 
   return (
@@ -73,7 +76,10 @@ function UserManagement() {
               placeholder="Search by name or email..."
               className="pl-9 pr-3 py-2 w-full border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setCurrentPage(1);
+              }}
             />
           </div>
           <button className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
@@ -182,15 +188,15 @@ function UserManagement() {
             <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
               <div className="flex-1 flex justify-between sm:hidden">
                 <button
-                  onClick={() => handlePageChange(currentPage - 1)}
-                  disabled={currentPage === 1}
+                  onClick={() => handlePageChange(safeCurrentPage - 1)}
+                  disabled={safeCurrentPage === 1}
                   className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Previous
                 </button>
                 <button
-                  onClick={() => handlePageChange(currentPage + 1)}
-                  disabled={currentPage === totalPages}
+                  onClick={() => handlePageChange(safeCurrentPage + 1)}
+                  disabled={safeCurrentPage === normalizedTotalPages}
                   className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Next
@@ -210,8 +216,8 @@ function UserManagement() {
                 <div>
                   <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
                     <button
-                      onClick={() => handlePageChange(currentPage - 1)}
-                      disabled={currentPage === 1}
+                      onClick={() => handlePageChange(safeCurrentPage - 1)}
+                      disabled={safeCurrentPage === 1}
                       className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <ChevronLeft className="h-5 w-5" />
@@ -221,7 +227,7 @@ function UserManagement() {
                         key={page}
                         onClick={() => handlePageChange(page)}
                         className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
-                          currentPage === page
+                          safeCurrentPage === page
                             ? "z-10 bg-blue-50 border-blue-500 text-blue-600"
                             : "bg-white border-gray-300 text-gray-500 hover:bg-gray-50"
                         }`}

@@ -56,17 +56,17 @@ function App() {
           {/* ADMIN ROUTES */}
           <Route 
             path="all-reports" 
-            element={user ? <AllReports /> : <Navigate to={"/login"} />} 
+            element={user?.role === "admin" ? <AllReports /> : <Navigate to={"/login"} />} 
           />
 
           <Route 
             path="user-management" 
-            element={user ? <UserManagement /> : <Navigate to={"/login"} />} 
+            element={user?.role === "admin" ? <UserManagement /> : <Navigate to={"/login"} />}  
           />
 
           <Route 
             path="/report/:id" 
-            element={user ? <ReportDetails /> : <Navigate to={"/login"} />} 
+            element={user?.role === "admin"? <ReportDetails /> : <Navigate to={"/login"} />} 
           />
 
           {/* Fall-back */}
