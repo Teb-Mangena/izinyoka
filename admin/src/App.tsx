@@ -13,6 +13,7 @@ import ErrorPage from "./pages/ErrorPage";
 import PageLoader from "./components/PageLoader";
 import AllReports from "./pages/Admin/AllReports";
 import ReportDetails from "./pages/Admin/ReportDetails";
+import UserManagement from "./pages/Admin/UserManagement";
 
 function App() {
   const { checkAuth, user, authChecked } = useAuthStore();
@@ -55,12 +56,17 @@ function App() {
           {/* ADMIN ROUTES */}
           <Route 
             path="all-reports" 
-            element={user ? <AllReports /> : <Navigate to={"/login"} />} 
+            element={user?.role === "admin" ? <AllReports /> : <Navigate to={"/login"} />} 
+          />
+
+          <Route 
+            path="user-management" 
+            element={user?.role === "admin" ? <UserManagement /> : <Navigate to={"/login"} />}  
           />
 
           <Route 
             path="/report/:id" 
-            element={user ? <ReportDetails /> : <Navigate to={"/login"} />} 
+            element={user?.role === "admin"? <ReportDetails /> : <Navigate to={"/login"} />} 
           />
 
           {/* Fall-back */}

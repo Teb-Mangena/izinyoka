@@ -15,7 +15,7 @@ interface SignupData {
   password: string;
 }
 
-interface UserImage {
+export interface UserImage {
   public_id: string;
   secure_url: string;
 }
@@ -118,7 +118,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     try {
       set({ loading: true });
 
-      const res = await axiosInstance.get('/users');
+      const res = await axiosInstance.get<User[]>('/users');
 
       set({ users: res.data });
 
