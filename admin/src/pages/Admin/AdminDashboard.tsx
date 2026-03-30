@@ -9,6 +9,7 @@ import {
   XCircle,
   TrendingUp,
   Filter,
+  CircleX
 } from "lucide-react";
 import { Link } from "react-router";
 import { useAuthStore } from "../../store/useAuthStore";
@@ -30,6 +31,7 @@ function AdminDashboard() {
 
   const PendingStatus = reps.filter((s) => s.status === "pending");
   const VerifiedStatus = reps.filter((s) => s.status === "verified");
+  const RejectedStatus = reps.filter((s) => s.status === "rejected");
 
   console.log(PendingStatus);
 
@@ -37,6 +39,7 @@ function AdminDashboard() {
     totalReports: reps.length,
     pendingReview: PendingStatus.length,
     verified: VerifiedStatus.length,
+    rejected: RejectedStatus.length,
     users: users.length,
   };
 
@@ -160,6 +163,21 @@ function AdminDashboard() {
                   </p>
                   <p className="text-2xl font-semibold text-gray-900">
                     {stats.verified}
+                  </p>
+                </div>
+              </div>
+            </Link>
+          </div>
+          <div className="bg-white rounded-lg shadow p-6 border border-gray-100">
+            <Link to="/rejected-reports">
+              <div className="flex items-center">
+                <div className="p-3 rounded-full bg-red-100 text-red-600">
+                  <CircleX className="h-6 w-6" />
+                </div>
+                <div className="ml-4">
+                  <p className="text-sm font-medium text-gray-500">Rejected Reports</p>
+                  <p className="text-2xl font-semibold text-gray-900">
+                    {stats.rejected}
                   </p>
                 </div>
               </div>

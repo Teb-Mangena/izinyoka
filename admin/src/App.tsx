@@ -14,6 +14,9 @@ import PageLoader from "./components/PageLoader";
 import AllReports from "./pages/Admin/AllReports";
 import ReportDetails from "./pages/Admin/ReportDetails";
 import UserManagement from "./pages/Admin/UserManagement";
+import PendingReports from "./pages/Admin/PendingReports";
+import RejectedReports from "./pages/Admin/RejectedReports";
+import VerifiedReports from "./pages/Admin/VerifiedReports";
 
 function App() {
   const { checkAuth, user, authChecked } = useAuthStore();
@@ -60,13 +63,28 @@ function App() {
           />
 
           <Route 
+            path="/report/:id" 
+            element={user?.role === "admin"? <ReportDetails /> : <Navigate to={"/login"} />} 
+          />
+
+          <Route 
             path="user-management" 
             element={user?.role === "admin" ? <UserManagement /> : <Navigate to={"/login"} />}  
           />
 
           <Route 
-            path="/report/:id" 
-            element={user?.role === "admin"? <ReportDetails /> : <Navigate to={"/login"} />} 
+            path="pending-reports" 
+            element={user?.role === "admin" ? <PendingReports /> : <Navigate to={"/login"} />}  
+          />
+
+          <Route 
+            path="verified-reports" 
+            element={user?.role === "admin" ? <VerifiedReports /> : <Navigate to={"/login"} />}  
+          />
+
+          <Route 
+            path="rejected-reports" 
+            element={user?.role === "admin" ? <RejectedReports /> : <Navigate to={"/login"} />}  
           />
 
           {/* Fall-back */}
