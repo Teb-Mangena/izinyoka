@@ -13,6 +13,7 @@ import ErrorPage from "./pages/ErrorPage";
 import PageLoader from "./components/PageLoader";
 import AllReports from "./pages/Admin/AllReports";
 import ReportDetails from "./pages/Admin/ReportDetails";
+import UserManagement from "./pages/Admin/UserManagement";
 
 function App() {
   const { checkAuth, user, authChecked } = useAuthStore();
@@ -56,6 +57,11 @@ function App() {
           <Route 
             path="all-reports" 
             element={user ? <AllReports /> : <Navigate to={"/login"} />} 
+          />
+
+          <Route 
+            path="user-management" 
+            element={user ? <UserManagement /> : <Navigate to={"/login"} />} 
           />
 
           <Route 
